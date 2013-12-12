@@ -1,0 +1,46 @@
+
+                         TransConnect 
+                Transparent Network Over HTTP Proxy
+                     (Dwivedi Ajay kumar)
+                    <adwiv AT yahoo DOT com>
+
+
+    So, you are facing problems with transconnect. The following tips may
+be of some help. However if nothing works out, drop me a line.
+
+    Also, if you have encountered any problems and solved them successfully,
+and you feel they deserve a mention in this guide, please send me a 
+description.
+
+COMPILATION:
+    *  Gives the following error on SunOS 5.6
+            
+        parse error before `socklen_t' 
+        In function `connect': 
+        number of arguments doesn't match prototype 
+
+        -> Here's the 3 step plan (By somebody):
+
+            1. add -Dsocklen_t=int -fPIC to your CFLAGS
+            2. remove the const in the connect declaration
+            3. change optlen from int to size_t
+    
+
+USAGE:
+    *  telnet/irc etc work great. But I can't make it do ssh.
+
+        -> Your ssh binary seems to be suid root. do a 
+           ls -l $(which ssh)
+           if the output is something like
+           -rwsr-xr-x    1 root     root       168260 Nov  2  2000 /usr/bin/ssh 
+              ^
+           with s in place of x in the permissions, you have a suid ssh.
+           If you have root access, do a 
+           chmod -s $(which ssh)
+           Otherwise, copy ssh to your home directory, say ~/bin, modify
+           your PATH to search ~/bin first, and enjoy
+
+    *  Our proxy does not allow HTTPS CONNECT to any other port than 443. How
+           do I overcome this?
+        -> Sorry friend, transconnect can't work with such paranoid proxies.
+           Try some other http tunneling softwares.

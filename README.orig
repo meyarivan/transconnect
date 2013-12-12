@@ -1,0 +1,36 @@
+                         TransConnect 
+                Transparent Network Over HTTP Proxy
+                     (Dwivedi Ajay kumar)
+                    <adwiv AT yahoo DOT com>
+
+        Transconnect is an implementation to allow network connections over 
+a HTTP proxy. This should work under almost all linux distributions using 
+glibc, and all proxies allowing https CONNECT (eg squid).
+
+        I have tested this on Squid/2.2 for telnet, ftp(passive only), ssh, 
+pine, fetchmail, whois, irc, realplayer, and yahoo messenger and netscape.
+I have also used rsync to mirror the entire 2.4 kernel directory using this.
+If you can/can't use any other programs, do inform me.
+
+        This program will not work if you want to run a suid executable. So
+if your ssh is suid, either remove the suid bit or copy it to another name
+and use that.
+
+        Read the files INSTALL and CONFIGURE for how to install and configure 
+this software.
+
+EXPLICIT WARNING:
+----------------
+         I DISCLAIM ALL RESPONSIBILITY FOR PROPER WORKING OF THIS SOFTWARE.
+IF IT BACKFIRES ON YOU, DON'T COME RUNNING TO KILL ME .
+YOU HAVE BEEN WARNED!!
+
+LICENCE:
+-------
+        This software has been released under GNU Pubic Licence. Read the file
+COPYING , which has been included with the distribution for details.
+
+LATEST VERSIONS:
+---------------
+        You can get the latest version of this software from 
+http://sourceforge.net/projects/transconnect

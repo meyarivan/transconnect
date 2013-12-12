@@ -1,0 +1,74 @@
+version 1.3Beta
+---------------
+
+06 Feb  2002       Added Support for user's resolv.conf
+06 Feb  2002       Added Support for dns queries over DNS
+
+version 1.2
+-----------
+28  Dec  2001	   Increased the Max. number of Local networks to 20.
+26  Dec  2001	   Username can be upto 20 char long
+		   and password upto 40 characters.
+25  Dec  2001	   Fixed the "strncat leaves the trailing null byte" Bug.
+
+version 1.1
+-----------
+15  Oct  2001	   Fixed the uninitialized variable bug which caused transconnect
+		   not to work on some of the machines.
+
+version 1.0
+-----------
+29  Sep  2001	   Transconnect is now Stable. It has been working fine without any
+		   serious bugs for a long time. So I thought to upgrade it from 
+		   Beta :-)
+
+29  Sep  2001	   Added the fclose(). We were earlier not closing the config file,
+		   which could cause the limit of number of open files to be reached.
+
+29  Sep  2001	   Changed the positioning of checks for non-TCP streams
+
+27  Sep	 2001	   Transconnect now uses TCONN environment variable for config file
+		   If not set defaults to the .tconn/tconn.conf file in home directory.
+		   Using this sysadmin can set up the configuration for all the users.
+		   	(Thanks to Artur Klauser)
+
+27  Sep  2001	   Added a lot of Comments.
+
+version 0.3
+-----------
+
+28  Aug  2001      Added the User-Agent header in Proxy Request
+
+28  Aug  2001      Added Keep-Alive and no-cache in Proxy Request.( Though I believe that 
+                        these are not needed. No proxy should cache a CONNECT request)
+      
+28  Aug  2001      make install now copies the old config file to tconn.conf.bak 
+
+28  Aug  2001      The message from the server is displayed if the connection fails.
+
+11 April 2001      The cvs update had caused all the changes done by binand to be
+                        lost. Corrected some of them.
+
+11 April 2001      Added TCONN_ to all defines local to this program in order to
+                        avoid conflicts with any system wide defines.
+
+11 April 2001      Added another check for func not being equal to connect. This
+                        happens when dynamic linking is not working.
+
+10 April 2001      Changed the declaration of signal handler variables to make
+                        it compile without warnings on SunOS.
+
+10 April 2001      Added a file libcpath.h which may be modified to use this
+                        program on *BSD.
+                        
+10 April 2001      Added a check for func being NULL in directconnect so that it
+                        returns Network unreachable if dynamic linking does not work.
+
+23 March 2001      Removed the checks for inet_addr returning -1, as we set the
+                        address to 255.255.255.255 in that case.
+
+23 March 2001      Applied the patches for NetBSD and OpenBSD.
+                        (Thanks to Harald Fielker, Sebastian Stark and Jared D. McNeil)
+
+11 Mar 2001            Changed the order of include files, due to warnings on NetBSD.
+                        (Thanks to Jared D. McNeil)

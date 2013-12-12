@@ -1,0 +1,139 @@
+                           TransConnect
+                 Transparent Network Over HTTP Proxy
+
+        Transconnect is an implementation to allow network connections over a HTTP
+proxy. This should work under almost all linux distributions using glibc or *BSD, 
+and with all proxies allowing https CONNECT (eg squid).
+
+INSTALLATION
+------------
+
+1. Linux : There is a Makefile supplied with the source. For the standard installation
+	Simply type
+                make
+                make install
+        
+        This compiles the shared library and copies it and configuration file
+        to a directory ".tconn" in your home directory.
+        See below for details of configuration.
+
+1a. Using Local resolv.conf
+
+		make localres
+		make install
+	This configuration uses a resolv.conf located in ~/.tconn/ instead of the
+	system resolv.conf . Use this option if you are a user on a computer without
+	admin previleges, and the system resolv.conf does not serve your purpose
+
+1b. Using TCP for DNS queries.
+
+		make tcpdns
+		make install
+	This configuration uses TCP for DNS queries, so that you can make DNS 
+	queries over the proxy server. Warning: This is really slow and should
+	not be used unless you don't have a local nameserver which can resolve
+	non-local domains.
+
+1c. Using TCP DNS and resolv.conf
+		
+		make localtcp
+		make install
+	This configuration uses both the local resolv.conf and TCP for DNS described
+	in 1a and 1b. This is for the case when you are don't have a friendly admin
+	and no nameservers capable of resolving non-local domains are available
+
+        
+2. *BSD 
+                If /usr/lib/libc.so is not a link to your libc, you will need to
+                edit the libc path in "libcpath.h". Then
+                
+                make bsd
+                make install
+        
+        See below for details of configuration.
+
+3. Solaris/Sun
+
+        make sun
+        make install
+        
+        See below for details of configuration.
+
+CONFIGURATION
+-------------
+        After compiling and installing the progam, you must configure it. The shared 
+library and configuration file are stored in .tconn dir in your home dir.
+                
+                cd $HOME/.tconn
+
+   Alternatively, you can setup the TCONN environment variable and set it to the
+   path of the config file.
+
+
+   There is a file "tconn.conf" in ".tconn" directory in your homedir. You 
+   *must* edit this file. The comments in the file start with a hash (#). 
+   Here I give you details of the settings.
+   
+   NOTE: The keywords (eg proxyserv) must start on the first column
+
+   a) proxyserv 172.16.1.1
+        Put the IP of your proxy server in place of 172.16.1.1 . You must use 
+        IP and not the name of the server.
+
+   b) proxyport 3128
+        Put the port your proxy runs on.
+
+   c) proxyuser   "bill"  
+      proxypass   "monica:)"
+        If your proxy does not need authorisation comment out the above two lines.
+        Otherwise put your login name and password in between the quotes. eg the
+        above lines are for a user with login name bill and password monica:)
+        If your password has any special characters like tab or a double quote
+        put them as it is. Do not use the C type escape sequences.
+                
+   d) localnet .......
+        These lines specify the local machines around you which you can access
+        directly. You must setup the local network. All applications will connect
+        to machines on  local network directly. Any machine not on localnetwork
+        will  be connected through the proxy.
+        
+        The syntax of localnet is network/netmask both in quad dot form. I can't
+        tell you the values for your network, you have to find out yourself.
+        Contact your system administrator if you have no idea what I am talking
+        about.
+
+   e) useragent
+        Completely Optional. Needed only if your proxy does not allow otherwise.
+
+4. Setup resolver:
+        Setup /etc/resolv.conf such that your machine can resolv all the hostnames.
+        If your network does not have such a nameserver you will have to use 
+        IP's and not hostnames for connecting to remote servers.
+
+5. Starting TransConnect:
+        Type the following on the command line
+        LD_PRELOAD=$HOME/.tconn/tconn.so
+        export LD_PRELOAD
+
+        Now try some network application like telnet/ssh or fetchmail/pine.
+
+   NOTE: you will be able to use this software only in the terminal you have
+        exported LD_PRELOAD. If it is a GUI application, launch it from the
+                command line.
+
+6. Stopping TransConnect:
+        Type the following on command line (Of the same terminal).
+        unset LD_PRELOAD
+
+
+7. Confiugring Squid: (For Admins Only).
+        Note: This is not needed in general as squid is often configured to
+        allow connect requests. If this is not the case, modify the squid.conf
+        to add the following:
+ 
+        acl connect_urls method CONNECT 
+        http_access allow connect_urls 
+ 
+        and run squid -k reconfigure. 
+        ( I am not a squid admin. This has been suggested by Binand <binand at 
+        sourceforge dot net> )

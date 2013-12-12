@@ -1,0 +1,99 @@
+#! /bin/sh
+
+# Copyright (C) 2006 Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>
+#  
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#  
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#  
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+
+TCONN_LIB=$HOME/.tconn/tconn.so
+
+if [ ! -z "$TCONN" ]; then
+    if [ ! -f "$TCONN" ]; then
+        echo "\$TCONN, if defined, must be the full path to config file. Current value = $TCONN" >&2
+        exit 2
+    fi
+
+    TCONN_LIB=$(dirname "$TCONN")/tconn.so
+fi
+
+base=$(basename "$0")
+honor_argv=
+case $base in
+	(tconn)		honor_argv=1;;
+	(tconn-*)	cmd=${base##tconn-};;
+	(t*)		cmd=${base##t};;
+	(*)		echo "Unknown invocation method '$base'; aborting..." >&2
+			exit 1;;
+esac
+
+if test -n "$honor_argv"; then
+    case $1 in
+      (--help) cat <<EOF
+Usage: tconn <program> <args>*
+
+Executes '<program> <args>*' with an LD_PRELOADed 'tconn.so' library.
+It reads '\$TCONN_CFG' where the used flavor of 'tconn.so' can be
+configured by setting the '\$TCONN_LIB' environment variable. The
+following flavors are supported:
+
+TCONN_LIB=FULL_PATH_to_tconn.so           ... only connect(2) will be wrapped [default]
+TCONN_LIB=FULL_PATH_to_tconn-localres.so  ... like 'tconn.so' but uses a local
+                                 '\$TCONN/resolv.conf' instead of the
+				 systemwide /etc/resolv.conf
+TCONN_LIB=FULL_PATH_to_tconn-tcpdns.so    ... like 'tconn.so' but makes DNS queries
+                                 over the proxy
+TCONN_LIB=FULL_PATH_to_tconn-localtcp.so  ... uses a local '\$TCONN/resolv.conf' and
+                                 makes DNS queries over the proxy
+	 
+When not set explicitly, '\$TCONN_CFG' evaluates to:
+
+* the 'tconn' file in the directory where '\$TCONN' is located, when
+  '\$TCONN' is set, or
+* '\$HOME/.tconn/tconn' else
+
+
+When argv0 (\$0) has the format 't<program>', or 'tconn-<program>' the
+program '<program>' will be executed as 'tconn <program>'. This allows
+shortcuts e.g. by creating a symlink like
+
+| \$ ln -s /usr/bin/git \$HOME/bin/tgit
+
+This make a 'tgit' available so that
+
+| \$ tgit pull origin
+
+has the same effect like
+
+| \$ tconn git pull origin
+
+
+This program is *NOT* part of the original transconnect package and
+provided by Fedora Extras only.  Please report bugs about it at
+https://bugzilla.redhat.com.
+EOF
+	exit 0
+	;;
+      (--)   shift;;
+    esac
+
+    test "$#" -ge 1 >/dev/null || {
+      echo "Error: no program given for 'tconn'; try '--help' for more information" >&2
+      exit 1
+    }
+    
+    cmd=$1
+    shift
+fi
+
+LD_PRELOAD=$TCONN_LIB \
+    exec "$cmd" "$@"

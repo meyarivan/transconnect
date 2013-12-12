@@ -1,0 +1,13 @@
+
+Transconnect has been installed
+Now Edit the .tconn/tconn.conf in your home directory
+
+if you want your config file to reside at a different
+place you can set the TCONN environment variable
+export TCONN=<path>/<filename>
+
+type the following for starting transconnect
+export LD_PRELOAD=tconn.so
+
+For stopping the transconnect type
+unset LD_PRELOAD
