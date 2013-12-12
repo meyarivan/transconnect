@@ -27,12 +27,12 @@ bsd: tconn.c
 sun: tconn.c
 	$(CC) $(SUN_LDFLAGS) $(SUN_LDLIBS) -o tconn.so tconn.c
 
-install:
+install: all
 	mkdir -p $(HOME)/.tconn
 	chmod 700 $(HOME)/.tconn
 	cp -f tconn*so $(HOME)/.tconn/
 	cp -f --backup=t -S .bak tconn.conf $(HOME)/.tconn/
-	cp -f README $(HOME)/.tconn/
+	cp -f README.orig $(HOME)/.tconn/
 	cp -f INSTALL $(HOME)/.tconn/
 	cat tconn.cat
 
